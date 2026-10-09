@@ -84,3 +84,11 @@ Validation uses test port 9715 and production 9716. Expected first result: 12 al
 Local app/presentation.js owns shared table/chart currency semantics, while engine.js continues to own SQL safety and exact serialization. tests/review.html provides an authored same-origin iframe for 1440/390/320 checks; ignored dist receives a local review copy after build. npm ci/build are repeatable, no external services or new dependencies, and root controls publication after independent PASS.
 
 The new first query exposed the old cyclic category labels (for example Book stand was Lighting). Replaced only product category labels with explicit plausible categories; IDs, prices, orders and shipment generation remain identical, so all monetary oracles are unchanged. A fresh source checkpoint and real-engine rerun cover the corrected introductory result.
+
+## Revision outcomes
+
+- [x] Final source/PLAN checkpoint 7e2cfd8c7588520a13568c04ed76d16ba7bf695a, with 41/41 real-engine cases at the source-identical model/test checkpoint b331239 and affected final CSS production checks completed.
+- [x] Actual large/default, tiny known answers, schema cursor/selection insertion, keyboard execution, exact money, invalid-query retention, cancel/reset, history and responsive/font/resource checks completed. EVALUATION.md preserves the build failure, tall exploratory layout, narrow-table correction and unscoped navigation diagnostic.
+- [ ] Independent review and coordinator publication/live checks remain pending.
+
+The final result teaches one table before joins while keeping the substantial data and explicit tiny hand-check. Money units are consistent without sacrificing raw export precision. Final layout refinements compact optional references and fit normal two-column USD results at 320 px; full result sets remain scrollable. Reports do not change the tested source or PLAN.
