@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fulfillment Lab export and recovery workflow</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;margin:24px;color:#262626}button{font:inherit;padding:10px 16px;margin:0 12px 12px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f2f1;padding:16px;max-width:1100px}iframe{display:block;width:1280px;height:844px;border:1px solid #666;margin-top:24px}.pass{color:#1d6363}.fail{color:#993d00}
+</style>
+</head>
+<body>
+<h1>Fulfillment Lab export and recovery workflow</h1>
+<p>This authored same-origin check edits the real app, submits its form, and uses its bundled database worker. It captures the app's actual generated CSV/note Blobs instead of opening native download dialogs. No query, result, clock or application response is stubbed. It is not a native download, keyboard or novice task observation.</p>
+<button id="run" disabled>Run five workflow checks</button>
+<button id="timeout" disabled>Run optional real 8-second timeout</button>
+<p id="status" role="status">Loading the app…</p>
+<ol id="results"></ol>
+<pre id="report">No observations yet. Timeout remains open unless the optional check observes it.</pre>
+<iframe title="Fulfillment Lab application under test"></iframe>
+<script>
+const frame=document.querySelector('iframe'),runButton=document.querySelector('#run'),timeoutButton=document.querySelector('#timeout'),status=document.querySelector('#status'),report=document.querySelector('#report'),results=document.querySelector('#results');
+const observations=[];
+let timeoutObservation={status:'OPEN',reason:'The actual 8-second UI timeout has not been attempted. No accelerated timeout is used.'};
+const heavySQL='SELECT SUM(sin(a.i+b.i)) FROM range(1000000) a(i), range(1000000) b(i);';
+const assert=(value,message)=>{if(!value)throw Error(message);};
+const $=id=>frame.contentDocument.getElementById(id);
+function snapshot(){return {dataset:$('dataset').value,editor:$('sql').value,executedSQL:$('executed-sql').textContent,resultOrigin:$('result-origin').textContent,resultStatus:$('result-status').textContent,engineStatus:$('engine-status').textContent,visibleRows:$('result-body').rows.length,visibleCells:[...$('result-body').rows].slice(0,2).map(row=>[...row.cells].map(cell=>cell.textContent)),pageNote:$('page-note').textContent,exportLabel:$('export').textContent,runDisabled:$('run').disabled,cancelDisabled:$('cancel').disabled};}
+function showReport(){report.textContent=JSON.stringify({scope:'Actual app DOM actions and worker; generated Blob capture, not native download or human evidence.',appURL:frame.contentWindow.location.href,environment:{userAgent:navigator.userAgent,frameWidth:frame.contentWindow.innerWidth,frameHeight:frame.contentWindow.innerHeight},observations,timeout:timeoutObservation},null,2);}
+function record(name,details){observations.push({name,status:'PASS',observedAt:new Date().toISOString(),...details});const li=document.createElement('li');li.className='pass';li.textContent='PASS — '+name;results.append(li);showReport();}
+function failure(error){observations.push({status:'FAIL',error:error.message,current:snapshot()});const li=document.createElement('li');li.className='fail';li.textContent='FAIL — '+error.message;results.append(li);status.textContent='FAILED — '+error.message;showReport();}
+function controls(disabled){runButton.disabled=disabled;timeoutButton.disabled=disabled;}
+function waitFor(condition,label,ms=12000){return new Promise((resolve,reject)=>{
+ const check=()=>{if(!condition())return;observer.disconnect();clearTimeout(timer);resolve();};
+ const observer=new MutationObserver(check),timer=setTimeout(()=>{observer.disconnect();reject(Error(label+' did not occur within '+ms+' ms.'));},ms);
+ observer.observe(frame.contentDocument.body,{subtree:true,childList:true,characterData:true,attributes:true});check();
+});}
+function edit(sql){$('sql').value=sql;$('sql').dispatchEvent(new frame.contentWindow.Event('input',{bubbles:true}));}
+async function settle(){await waitFor(()=>$('cancel').disabled&&!$('result-status').textContent.startsWith('Running query'),'Query completion');}
+async function query(sql){assert(!$('run').disabled,'Run must be available before submitting SQL.');edit(sql);$('run').click();await settle();return snapshot();}
+async function recover(sql){const state=await query(sql);assert(!state.resultStatus.startsWith('Query failed:'),'Recovery query failed.');assert(state.executedSQL===sql&&state.resultOrigin==='Results match the editor.','Recovery did not attribute results to the corrected query.');return state;}
+async function resetWorker(){const sql=$('sql').value;$('reset').click();await waitFor(()=>$('engine-status').textContent.startsWith('Ready')&&!$('run').disabled,'Database reset',30000);assert($('sql').value===sql,'Reset discarded the editor text.');}
+function captureDownloads(){
+ const w=frame.contentWindow,originalURL=w.URL.createObjectURL,originalClick=w.HTMLAnchorElement.prototype.click,blobs=new Map(),downloads=[];
+ w.URL.createObjectURL=function(blob){const url=originalURL.call(this,blob);blobs.set(url,blob);return url;};
+ w.HTMLAnchorElement.prototype.click=function(){if(this.download&&this.href.startsWith('blob:')){downloads.push({name:this.download,blob:blobs.get(this.href)});return;}return originalClick.call(this);};
+ return {downloads,restore(){w.URL.createObjectURL=originalURL;w.HTMLAnchorElement.prototype.click=originalClick;}};
+}
+async function exportPair(capture,executedSQL,expectedCSV,capped){
+ const first=capture.downloads.length;$('export').click();$('download-note').click();
+ const pair=capture.downloads.slice(first);assert(pair.length===2,'CSV and matching note must each generate one download.');
+ const csv=pair.find(item=>item.name==='fulfillment-tiny-results.csv'),note=pair.find(item=>item.name==='fulfillment-tiny-result-note.txt');
+ assert(csv?.blob&&note?.blob,'Download filenames or captured real Blobs do not match the tiny dataset.');
+ const [csvText,noteText]=await Promise.all([csv.blob.text(),note.blob.text()]);
+ assert(csvText===expectedCSV,'CSV differs from independently specified raw query values.');
+ const count=capped?500:4;
+ for(const text of ['CSV: fulfillment-tiny-results.csv','Dataset: tiny synthetic example','orders: 3','products: 2','line_items: 4','shipment_lines: 4',`Retained rows: ${count}${capped?' (500-row cap reached; additional rows exist)':' (uncapped result)'}`,'Table pagination: up to 50 rows','integer USD cents',executedSQL])assert(noteText.includes(text),'Result note is missing: '+text);
+ assert(!noteText.includes('draft_only'),'Result note incorrectly saved the unexecuted editor text.');
+ assert(Number.isFinite(Date.parse(noteText.match(/^Completed: (.+)$/m)?.[1])),'Result note lacks a valid completion timestamp.');
+ const lines=csvText.trimEnd().split('\r\n');
+ return {downloads:[{name:csv.name,type:csv.blob.type,bytes:csv.blob.size,records:lines.length-1,firstLines:lines.slice(0,3),lastLine:lines.at(-1)},{name:note.name,type:note.blob.type,bytes:note.blob.size,text:noteText}],ui:snapshot()};
+}
+runButton.onclick=async()=>{
+ controls(true);results.replaceChildren();observations.length=0;status.textContent='Running five checks through the actual app…';let capture;
+ try{
+  if($('engine-status').textContent.startsWith('Worker stopped.'))await resetWorker();
+  await waitFor(()=>$('engine-status').textContent.startsWith('Ready')&&!$('run').disabled,'Initial database readiness',30000);
+  capture=captureDownloads();
+  const tinySQL='SELECT line_id, ordered_units, unit_price_cents\nFROM line_items\nORDER BY line_id;';
+  edit(tinySQL);$('dataset').value='tiny';$('dataset').dispatchEvent(new frame.contentWindow.Event('change',{bubbles:true}));
+  await waitFor(()=>$('executed-sql').textContent===tinySQL&&!$('run').disabled&&$('result-body').rows.length===4,'Tiny dataset query',30000);
+  edit("SELECT 'not executed' AS draft_only;");
+  assert($('result-origin').textContent.startsWith('Editor changed.'),'Edited query is not marked as different from the completed result.');
+  const tinyCSV='"line_id","ordered_units","unit_price_cents"\r\n"A","10","2000"\r\n"B","5","3000"\r\n"C","4","2500"\r\n"D","2","5000"\r\n';
+  record('Uncapped CSV and note retain executed SQL, tiny identity, units and four rows after an editor change',await exportPair(capture,tinySQL,tinyCSV,false));
+
+  const capSQL='SELECT range::BIGINT AS sequence, (range * 101)::BIGINT AS gross_cents\nFROM range(501)\nORDER BY sequence;';
+  const cap=await recover(capSQL);assert(cap.visibleRows===50&&cap.pageNote==='Rows 1–50 of 500 retained (cap reached)'&&cap.exportLabel==='Download 500 retained rows (CSV)','Visible page, retained cap or export count is not explicit.');
+  edit("SELECT 'another unexecuted edit' AS draft_only;");
+  const capCSV='"sequence","gross_cents"\r\n'+Array.from({length:500},(_,i)=>`"${i}","${i*101}"`).join('\r\n')+'\r\n';
+  record('Capped CSV exports 500 raw rows while the table shows 50; note retains the completed query and cap',await exportPair(capture,capSQL,capCSV,true));
+
+  const unknown='SELECT nonexistent FROM line_items;',beforeUnknown=snapshot();
+  const badColumn=await query(unknown);
+  assert(badColumn.resultStatus.startsWith('Query failed:')&&badColumn.resultStatus.includes('Tables and columns'),'Unknown-column UI lacks specific recovery guidance.');
+  assert(badColumn.editor===unknown&&badColumn.executedSQL===beforeUnknown.executedSQL&&JSON.stringify(badColumn.visibleCells)===JSON.stringify(beforeUnknown.visibleCells)&&badColumn.visibleRows===50&&badColumn.resultOrigin.startsWith('Editor changed.'),'Unknown-column failure changed the draft or mislabeled/replaced old results.');
+  const columnRecovery=await recover('SELECT COUNT(*)::BIGINT AS line_count FROM line_items;');assert(columnRecovery.visibleCells[0][0]==='4','Unknown-column recovery did not use the real four-line dataset.');
+  record('Unknown-column error preserves draft and old-result provenance; corrected query recovers',{failure:badColumn,recovery:columnRecovery});
+
+  const malformed='SELECT FROM;',beforeSyntax=snapshot(),badSyntax=await query(malformed);
+  assert(badSyntax.resultStatus.startsWith('Query failed:')&&badSyntax.resultStatus.includes('Check commas, quotes and clause order'),'Malformed SQL UI lacks syntax recovery guidance.');
+  assert(badSyntax.editor===malformed&&badSyntax.executedSQL===beforeSyntax.executedSQL&&JSON.stringify(badSyntax.visibleCells)===JSON.stringify(beforeSyntax.visibleCells)&&badSyntax.resultOrigin.startsWith('Editor changed.'),'Syntax failure changed the draft or mislabeled/replaced old results.');
+  const syntaxRecovery=await recover("SELECT 'recovered' AS outcome, 42::BIGINT AS answer;");assert(JSON.stringify(syntaxRecovery.visibleCells)==='[["recovered","42"]]','Syntax recovery result differs from the specified query.');
+  record('Malformed SQL preserves draft and old-result provenance; corrected query recovers',{failure:badSyntax,recovery:syntaxRecovery});
+
+  const beforeCancel=snapshot();edit(heavySQL);const started=performance.now();$('run').click();
+  await new Promise(resolve=>setTimeout(resolve,250));
+  assert(!$('cancel').disabled,'The heavy query settled before Cancel could be exercised; cancellation remains unverified.');
+  const cancelAtMs=performance.now()-started;assert(cancelAtMs<8000,'Cancel was not activated within the app’s eight-second query budget.');$('cancel').click();await settle();
+  const cancelled=snapshot();assert(cancelled.resultStatus.includes('Query cancelled.')&&cancelled.resultStatus.includes('Reset database')&&cancelled.engineStatus.startsWith('Worker stopped.')&&cancelled.runDisabled,'Cancel did not report a stopped worker and actionable reset.');
+  assert(cancelled.editor===heavySQL&&cancelled.executedSQL===beforeCancel.executedSQL&&JSON.stringify(cancelled.visibleCells)===JSON.stringify(beforeCancel.visibleCells),'Cancellation changed the SQL or replaced the previous completed result.');
+  await resetWorker();const cancelRecovery=await recover('SELECT 42::BIGINT AS recovered;');assert(cancelRecovery.visibleCells[0][0]==='42','Fresh worker failed after cancellation.');
+  record('Actual heavy query is cancelled within eight seconds; Reset preserves SQL and a fresh worker recovers',{cancelAtMs:Number(cancelAtMs.toFixed(1)),cancelled,recovery:cancelRecovery});
+  status.textContent='5/5 passed. Captured downloads are real generated Blobs; native dialogs and human tasks were not exercised.';
+ }catch(error){failure(error);}finally{capture?.restore();controls(false);}
+};
+timeoutButton.onclick=async()=>{
+ controls(true);status.textContent='Attempting the real eight-second worker timeout; no timer is shortened.';
+ try{
+  if($('run').disabled)await resetWorker();
+  const before=snapshot(),started=performance.now(),timedOut=await query(heavySQL),elapsedMs=performance.now()-started;
+  assert(timedOut.resultStatus.includes('Query exceeded 8 seconds.')&&timedOut.resultStatus.includes('narrow the joins or filter inputs')&&timedOut.engineStatus.startsWith('Worker stopped.')&&timedOut.runDisabled,'Actual eight-second timeout was not induced; keep timeout verification open.');
+  assert(timedOut.editor===heavySQL&&timedOut.executedSQL===before.executedSQL,'Timeout changed editor text or old-result provenance.');
+  await resetWorker();const recovery=await recover('SELECT 42::BIGINT AS recovered;');assert(recovery.visibleCells[0][0]==='42','Fresh worker failed after timeout.');
+  timeoutObservation={status:'PASS',observedAt:new Date().toISOString(),elapsedMs:Number(elapsedMs.toFixed(1)),timedOut,recovery};status.textContent='Actual eight-second timeout and reset recovery observed. Other check outcomes remain in the report.';
+ }catch(error){timeoutObservation={status:'OPEN',reason:error.message,current:snapshot()};status.textContent='Timeout remains OPEN — '+error.message;}
+ showReport();controls(false);
+};
+frame.addEventListener('load',()=>{if(!$('query-form'))return;controls(false);status.textContent='App frame loaded. Run waits for the actual local engine to be ready.';});
+frame.src=location.pathname.startsWith('/bab-example-sql/')?'./':'../app/';
+</script>
+</body>
+</html>
