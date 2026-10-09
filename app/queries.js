@@ -58,6 +58,12 @@ FROM fulfillment f
 JOIN orders o ON f.order_id = o.order_id
 JOIN products p ON f.product_id = p.product_id
 ORDER BY f.line_id;`},
+ {id:'tiny-lines',title:'Inspect · raw tiny order lines',note:'Run with the tiny dataset to see all four lines. Ordered units × unit price reconstructs $550 without any shipment join.',sql:`SELECT line_id, order_id, product_id, ordered_units, unit_price_cents
+FROM line_items
+ORDER BY line_id;`},
+ {id:'tiny-shipments',title:'Inspect · raw tiny shipment events',note:'Run with the tiny dataset to see four events. A appears twice: 3 + 2 = 5 shipped units. D has no event.',sql:`SELECT shipment_id, line_id, shipped_on, shipped_units
+FROM shipment_lines
+ORDER BY shipment_id;`},
  {id:'unshipped',title:'9 · Orders with no shipments',note:'NOT EXISTS keeps an order only when none of its lines has a shipment event. A partially shipped order does not belong here.',sql:`SELECT o.order_id, o.region, o.ordered_on
 FROM orders o
 WHERE NOT EXISTS (
