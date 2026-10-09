@@ -48,3 +48,6 @@ Actual browser suite passed 41/41. Large first load showed 2,400 orders / 7,200 
 
 
 The introductory result exposed implausible historical cyclic categories such as Book stand / Lighting. Replaced descriptive categories with an explicit plausible catalog while retaining all product IDs, prices and fulfillment data. The next checkpoint reruns the real-engine suite; all earlier monetary expectations remain unchanged. During actual Back/cancel checks the browser captured one unscoped MutationObserver.observe error without an app URL/stack. The app resumed with consistent large/default controls and results; cancellation/reset then SELECT 42 succeeded. The diagnostic is retained and a clean-load log comparison will follow.
+
+
+At b331239 the final 320 px region chart was readable, but inherited 145 px table column minima pushed even the two-column dollar result offscreen inside the local scroll region. Reduced the minimum to 110 px and allowed numeric headings to wrap while preserving unbroken numeric values. Wider queries and very large values still scroll locally. This is an affected-layout correction; model tests at b331239 remain 41/41 and the engine is unchanged.
