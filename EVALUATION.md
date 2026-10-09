@@ -35,3 +35,8 @@ Production pageAssets inventory listed only local app JS/CSS/EH worker and favic
 After recovering from another browser download-event hang, the coordinator reported actual deadline and download PASS. This closes the two previously pending observations; the earlier stalled event wait remains a tool failure and is not counted as a successful export. No source or PLAN changed. Detailed coordinator observations and the independent reviewer verdict remain authoritative; this report does not independently claim a new browser run. Future checks use the actual download button followed by inspection of the known synthetic file, never another waitForEvent download call.
 
 Coordinator promotion gate: reviewed source7a957523d776471eec7283311a562a9793d7f729 received independent APPLICATION PASS. The exact EH local-worker configuration is now approved and the normal canonical dependency checker passed. Relevant source, PLAN, tests, dependencies, configuration and workflow remain identical to the checkpoint. Actual CSV parsing independently confirmed the exact values and escaped formula text; raw CSV precision does not promise a spreadsheet's automatic import behavior.
+
+
+## Live revision exploratory build failure — 2026-10-09
+
+The first revision build failed because a broad edit placed an await inside the nonasync join-lesson click handler. No tested checkpoint or deployment used that source. Restored the handler's existing reset call; font loading is confined to module startup. This failed build is retained and requires a fresh successful build and browser checks.

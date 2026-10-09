@@ -1,16 +1,19 @@
 import {Engine} from '../app/engine.js';
 import {dataset,reference} from '../app/data.js';
 import {queries} from '../app/queries.js';
+import {isMoney,exactDollars,resultValue} from '../app/presentation.js';
 let total=0,failed=0;const equal=(a,b)=>{if(JSON.stringify(a)!==JSON.stringify(b))throw Error(`Expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`);};
 const status=document.getElementById('status');
 async function check(name,fn){total++;const li=document.createElement('li');try{await fn();li.textContent='PASS — '+name;li.className='pass';}catch(e){failed++;li.textContent='FAIL — '+name+': '+e.message;li.className='fail';}document.getElementById('results').append(li);status.textContent=`${total-failed}/${total} passed so far; ${failed} failed. Running…`;}
 let engine=new Engine();
 try{
  await engine.open('tiny');
+ await check('Exact USD preserves huge integer cents, signs and nonzero fractions',()=>equal(['900719925474099301','-1','17500','0'].map(exactDollars),['$9,007,199,254,740,993.01','-$0.01','$175','$0']));
+ await check('Unknown aliases and decimal fields never guess currency units',()=>{equal(isMoney({name:'invented_cents',typeId:2}),false);equal(isMoney({name:'gross_cents',typeId:7}),false);equal(resultValue({name:'invented_cents',typeId:2},'17500'),'17500');});
  await check('Tiny table counts3/2/4/4',()=>equal(Object.values(engine.data).map(rows=>rows.length),[3,2,4,4]));
  await check('Actual SQL reconciles21units/11shipped/$550/$275/$275',async()=>equal((await engine.query(queries.find(q=>q.id==='totals').sql)).rows,[['21','11','55000','27500','27500']]));
- await check('Region gapWest17500cents/East10000',async()=>equal((await engine.query(queries[0].sql)).rows,[['West','17500'],['East','10000']]));
- await check('Product gapNotebook17500/Lamp10000',async()=>equal((await engine.query(queries[1].sql)).rows,[['Notebook','17500'],['Lamp','10000']]));
+ await check('Region gapWest17500cents/East10000',async()=>equal((await engine.query(queries.find(q=>q.id==='regions').sql)).rows,[['West','17500'],['East','10000']]));
+ await check('Product gapNotebook17500/Lamp10000',async()=>equal((await engine.query(queries.find(q=>q.id==='products').sql)).rows,[['Notebook','17500'],['Lamp','10000']]));
  await check('Naivejoin75000 versuscorrect55000',async()=>equal((await engine.query(queries.find(q=>q.id==='mistake').sql)).rows.map(row=>row[1]),['75000','55000']));
  await check('OnlyO3 has no shipment events',async()=>equal((await engine.query(queries.find(q=>q.id==='unshipped').sql)).rows,[['O3','West','2026-01-07']]));
  await check('LineA aggregates two shipments into5units and10000outstanding',async()=>equal((await engine.query(queries.find(q=>q.id==='lines').sql)).rows[0],['A','East','Notebook','10','5','5','10000']));
@@ -31,6 +34,9 @@ try{
  await check('Syntaxerror thenvalid42 recovers',async()=>{let error;try{await engine.query('SELECT bad FROM missing');}catch(e){error=e;}if(!error)throw Error('missingerror');equal((await engine.query('SELECT 42 AS answer')).rows,[['42']]);});
  await check('Cancel terminates expensive computation and settles run',async()=>{const run=engine.query('SELECT SUM(sin(a.i+b.i)) FROM range(1000000) a(i),range(1000000) b(i)').catch(e=>e.message);setTimeout(()=>engine.stop(),30);const message=await run;if(!message.includes('cancelled'))throw Error(String(message));equal(engine.disposed,true);});
  engine=new Engine();await engine.open('large');
+ await check('First query inspects12 products in alphabetical order',async()=>{const rows=(await engine.query(queries.find(q=>q.id==='inspect').sql)).rows;equal(rows.length,12);equal(rows[0],['Book stand','Lighting']);equal(rows.at(-1),['Task timer','Lighting']);});
+ await check('First aggregation counts600 orders in each region',async()=>equal((await engine.query(queries.find(q=>q.id==='aggregate').sql)).rows,[['Central','600'],['East','600'],['South','600'],['West','600']]));
+ await check('Filtered starter returns20 lines of40 units with exact price cents',async()=>{const rows=(await engine.query(queries.find(q=>q.id==='filter').sql)).rows;equal(rows.length,20);equal(rows.every(row=>row[1]==='40'),true);equal(rows[0],['L1010', '40', '2650']);});
  await check('Freshlarge database aftercancel has2400orders/7200lines/12products',async()=>equal((await engine.query('SELECT (SELECT count(*) FROM orders)::BIGINT,(SELECT count(*) FROM line_items)::BIGINT,(SELECT count(*) FROM products)::BIGINT')).rows,[['2400','7200','12']]));
  await check('Large actualSQL agreeswithindependentintegerrowarithmetic',async()=>{const r=reference(dataset('large'));equal((await engine.query(queries.find(q=>q.id==='totals').sql)).rows,[[String(r.units),String(r.shippedUnits),String(r.gross),String(r.shipped),String(r.outstanding)]]);});
  await check('Largecorrespondingline neverovershipped',async()=>equal((await engine.query('SELECT COUNT(*)::BIGINT FROM (SELECT l.line_id FROM line_items l JOIN shipment_lines s USING(line_id) GROUP BY l.line_id,l.ordered_units HAVING SUM(s.shipped_units)>l.ordered_units)')).rows,[['0']]));

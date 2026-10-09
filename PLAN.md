@@ -13,3 +13,14 @@ Acceptance: realtinySQLanswers/mistakenjoincontrast, fullsynthesistablecounts, S
 ## Implemented enforcement decision
 
 The failed JSON-extension approach is superseded. The app uses native tokenization plus a native prepared SELECT subquery inside a READ ONLY transaction. Configuration is locked before editable SQL, with external access and extension loading disabled. The actual 36-case suite verifies wrapper escapes, exact literals, cancellation/recovery and JSON loaded=false. Historical failures and observation limits remain in EVALUATION.md.
+
+
+## Authorized live revision — 2026-10-09
+
+The user requested substantive updates to the live examples against current guidance. The opening dataset is now the existing substantial 2,400-order case, with a learning path from one-table inspection through filtering/sorting, aggregation and the original join investigations. The tiny $550/$275/$275 verification case remains one explicit action away. No new simulated student approval is implied. The recipe still uses DuckDB-Wasm 1.32.0 and ECharts 6.1.0; these versions are approved in the current local inventory (the initial candidate discussion above is historical). Native engine enforcement, dataset generation, caps, precision serialization and exports retain their original contracts.
+
+Presentation interprets only the documented integer money names unit_price_cents, gross_cents, shipped_cents and outstanding_cents as USD. BigInt division formats exact dollars without converting through Number; whole dollars omit .00. Arbitrary aliases and noninteger fields remain raw. Headers state USD and CSV retains original names/raw cents. Storage types move behind a disclosure. The schema exposes controlled quoted table/column insertion at the current selection; it never injects arbitrary imported names. Edits wait for Run query because partial SQL is not a complete operation.
+
+Local licensed EB Garamond and Open Sans fonts, numeric lining figures, natural headings, readable table alignment, a learning objective and public BUILD-STORY link implement shared guidance. Collapsed schema and model details shorten the initial page. Numeric charts keep explicit units and a zero baseline; exact tables remain authoritative. Original input is already varied by product, region, price and shipment completion, so no new data-generation rule is needed for this revision.
+
+Acceptance adds simple-query answers and huge exact-money/unknown-alias boundaries to the existing 36 real-engine checks. Production must demonstrate the large default, tiny join trap, column insertion/selection/focus, edited-query provenance, numeric alignment, matching chart/table money, controls/results consistency after Back, local fonts and 1440/390/320 layouts. Public prefix, clean source/PLAN checkpoint, independent review and live verification remain required.

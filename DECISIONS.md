@@ -29,3 +29,10 @@ Queries have a default eight-second deadline. Cancellation and timeout terminate
 One engine owns query execution; one UI owns controls/results. Native autocomplete is disabled so history restoration does not silently pair nondefault controls with a fresh default database. A persisted page keeps its worker; normal disposal closes it. There is no database persistence, account, backend, remote asset service or telemetry.
 
 Simplification pass: removed JSON extension/parser statements entirely, retained native SQL parsing rather than a second parser, reused one engine generation guard for resets, and initializes the chart only when an eligible result exists. No speculative abstractions or duplicate result models were added.
+
+
+## Authorized live revision, 2026-10-09
+
+Default to the substantial existing data and start with one-table SELECT. Preserve the tiny case as an explicit hand-check action. Add WHERE/ORDER BY and GROUP BY steps before the joins; this teaches progressively without weakening the original business question. Schema buttons insert quoted controlled identifiers at the selection and return focus to the editor. Result provenance tracks custom edits, including schema insertions and browser return. Run remains explicit because partially edited SQL can be invalid or expensive.
+
+Known integer money fields display exact dollars using BigInt, with currency in their headers. Unknown aliases stay raw; arbitrary suffixes do not imply dollars. Exports preserve raw numeric values and original column names. Raw storage types are secondary reference material. Local licensed fonts and one concise business explanation replace system-font substitutes and initial engine jargon. No engine enforcement or data-generation changes are required. DuckDB is approved by the current dependency inventory; the old candidate discussion remains as history.

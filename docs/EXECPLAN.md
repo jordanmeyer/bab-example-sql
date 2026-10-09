@@ -67,3 +67,18 @@ Revisionnote2026-10-09: originalconfirmedplanandspecifictechnicalproofmilestone 
 - [ ] Independent reviewer verdict and coordinator candidate promotion/publication.
 
 The early read-only and implementation-pending prose is historical planning state. Current source uses no JSON parser extension. The engine's own tokenizer and prepared-statement parser preserve exact literals and reject multiple statements, with an independent native read-only transaction. Developer browser availability was lost after an interrupted download wait; remaining narrow and lifecycle observations are attributed to the coordinator. No alternate browser automation was used.
+
+
+## Authorized live revision milestones — 2026-10-09
+
+Purpose: make the substantial SQL example approachable from its first query, with useful editor schema and exact human-readable money. User authorization expands the original scope; no additional student roleplay was invented. Preserve the native engine and all failed historical rounds.
+
+- [x] Read current plugin/design guidance, common/app checklist, original brief and whole application. Fetch clean origin and retain existing recipe.
+- [x] Implement large default, three introductory queries, controlled schema insertion, exact-dollar presentation, query provenance, local fonts and public build story.
+- [x] Fresh npm ci and approved dependency check pass. Initial build failed after a broad startup edit entered the nonasync lesson handler; corrected the handler and retained the failed round. Successful build retains 34 font/package notice sections.
+- [ ] Source/PLAN checkpoint, 41 meaningful real-engine cases and actual production interactions.
+- [ ] Independent review, fixes if required, coordinator publication and live verification.
+
+Validation uses test port 9715 and production 9716. Expected first result: 12 alphabetized products, Book stand / Lighting first and Task timer / Lighting last. Aggregation: 600 orders each in Central, East, South, West. Independently enumerated filter ordering yields L1010 / 40 / 2650 cents first among 20 maximum-unit lines. Tiny totals and mistaken join remain 55000/27500/27500 cents and 75000 versus 55000. Currency boundaries include 900719925474099301 cents → $9,007,199,254,740,993.01 and -1 cent → -$0.01; unknown aliases remain raw.
+
+Local app/presentation.js owns shared table/chart currency semantics, while engine.js continues to own SQL safety and exact serialization. tests/review.html provides an authored same-origin iframe for 1440/390/320 checks; ignored dist receives a local review copy after build. npm ci/build are repeatable, no external services or new dependencies, and root controls publication after independent PASS.
