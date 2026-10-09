@@ -58,6 +58,9 @@ ${errorGuidance(error.message||'')} Your SQL is unchanged.${result?' Previous re
 }
 $('starter').replaceChildren(...[...queries,{id:'custom',title:'Custom query'}].map(q=>{const option=el('option',q.title);option.value=q.id;return option;}));
 function resultOrigin(){const selected=queries.find(q=>q.sql===$('sql').value);$('starter').value=selected?.id||'custom';$('query-note').textContent=selected?.note||'Custom SQL. Run when ready; previous results stay visible until a query succeeds.';$('result-origin').textContent=result?($('sql').value===result.sql?'Results match the editor.':'Editor changed. Results below belong to the last completed SQL shown here.'):'No completed result yet.';}
+document.querySelector('.skip').addEventListener('click',event=>{
+  event.preventDefault();const editor=$('sql');editor.focus({preventScroll:true});editor.setSelectionRange(0,0);editor.scrollLeft=0;editor.scrollTop=0;$('sql-label').scrollIntoView({block:'start'});
+});
 $('sql').addEventListener('input',resultOrigin);
 function chooseQuery(){const q=queries.find(q=>q.id===$('starter').value);if(!q)return;if($('sql').value&&$('sql').value!==q.sql)previousQuery=$('sql').value;$('sql').value=q.sql;$('restore-query').hidden=previousQuery===null;resultOrigin();}
 $('starter').addEventListener('change',chooseQuery);chooseQuery();

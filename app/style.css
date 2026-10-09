@@ -7,3 +7,5 @@
 .hand-check{padding:0;border:0}.hand-check summary{margin-bottom:14px;font-size:15px}.hand-check p{font-size:14px;margin-top:14px}.schema-panel>.schema-reference{padding:0;border:0}.schema-panel>.schema-reference>summary{font:24px/1.2 var(--duke-font-heading);color:var(--navy);min-height:32px}.schema-note{margin-top:14px}
 
 .inspect-actions,.export-actions{display:flex;flex-wrap:wrap;gap:10px}.run-bar{flex-wrap:wrap}.export-actions{max-width:100%}button{max-width:100%;white-space:normal}#chart-unavailable{padding:14px;border-left:3px solid var(--teal);background:#eef0ed;overflow-wrap:anywhere}#chart-unavailable p:last-of-type{margin-bottom:4px}#result-status{white-space:pre-wrap}.brand-mark{flex-shrink:0}@media(max-width:400px){header{flex-wrap:wrap;gap:15px}.brand{min-width:0}.brand>span:last-child{overflow-wrap:anywhere}.known{display:flex;flex-wrap:wrap;gap:8px}.known strong{font-size:26px}.pagination{flex-wrap:wrap}}
+
+#sql-label{margin-bottom:7px;scroll-margin-top:16px}
