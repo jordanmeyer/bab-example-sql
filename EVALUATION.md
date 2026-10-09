@@ -40,3 +40,8 @@ Coordinator promotion gate: reviewed source7a957523d776471eec7283311a562a9793d7f
 ## Live revision exploratory build failure — 2026-10-09
 
 The first revision build failed because a broad edit placed an await inside the nonasync join-lesson click handler. No tested checkpoint or deployment used that source. Restored the handler's existing reset call; font loading is confined to module startup. This failed build is retained and requires a fresh successful build and browser checks.
+
+
+## Live revision exploratory browser round — source 8a790a9
+
+Actual browser suite passed 41/41. Large first load showed 2,400 orders / 7,200 lines / 9,900 events and 12 alphabetized products. Tiny join lesson rendered $750 versus $550. All three local fonts loaded; 1440 and 320 frames showed no page overflow, initial external resources or undersized targets. Narrow page height was still 3,587 px and the editor appeared too far down after the optional hand-check and schema. Compacted these secondary references into disclosures; affected layout/keyboard checks require a fresh source checkpoint. This exploratory result does not claim final layout approval.
