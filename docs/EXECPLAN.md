@@ -92,3 +92,5 @@ The new first query exposed the old cyclic category labels (for example Book sta
 - [ ] Independent review and coordinator publication/live checks remain pending.
 
 The final result teaches one table before joins while keeping the substantial data and explicit tiny hand-check. Money units are consistent without sacrificing raw export precision. Final layout refinements compact optional references and fit normal two-column USD results at 320 px; full result sets remain scrollable. Reports do not change the tested source or PLAN.
+
+- [x] Independent coordinator PASS at 7e2cfd8, publication of 5de66d0, successful Actions 37966909822 and actual live default/tiny/reload/log checks completed. DEPLOYMENT.md distinguishes retained navigation diagnostics from fresh live logs. Only this report follows the tested source; owned review servers are stopped.
