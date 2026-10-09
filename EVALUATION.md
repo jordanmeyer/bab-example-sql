@@ -71,3 +71,38 @@ Final same-origin production frames measured client/scroll widths 1439/1439, 389
 A separate simplification pass kept one canonical currency policy shared by table/chart, retained the native editor/engine and exact CSV path, used controlled names for schema insertion, and let query text determine starter/provenance state instead of maintaining a second state copy. No framework, dependency upgrade, persistence or runtime service was introduced. Source/PLAN freshness comparison against 7e2cfd8 is clean before this report; subsequent edits are reports/ExecPlan only. Independent review and live deployment remain distinct steps.
 
 Independent coordinator PASS received for final source 7e2cfd8. Reviewer confirmed 41/41 tests, actual default/aggregate/tiny answers, narrow fonts/resources/targets/layout and keyboard USD table fit, and reviewed the whole engine boundary plus changed source. Full attributed verdict is in REVIEW.md. Source/PLAN comparison remains clean; publication is authorized, with live verification pending.
+
+## Remaining-checklist corrections — source b31605ff11c8882e40b7b564a651a2514427790c — browser review pending
+
+Clean install, approved-dependency check and production build passed. This checkpoint addresses the revised126-item checklist rather than the previous live-revision review. BUILD-STORY contains a bounded authored student task and exact answers; it is not an actual novice observation. The suite contains47 cases, with current browser execution pending. CUA returned no available browsers in the implementation agent; parent review has the actual test/production URLs on9715/9716. The authored320/200%text harness is available at the production/review.html; font enlargement is not native browser zoom. Actual screen-reader and novice walkthroughs remain open, and no readiness claim is made. Source/PLAN paths are committed; generated dist/node_modules stay ignored. No publication has occurred for this correction round.
+
+## Independent source/model review — PASS at b31605ff11c8882e40b7b564a651a2514427790c
+
+Reviewer: collaborating agent `/root/live_revision_operations`, October 9, 2026. The independent agent read full app/model/query/engine/presentation/data/index/BUILD-STORY and relevant CSS/tests. A plain BigInt reduction independently confirmed gross 611,718,275 cents, shipped 409,332,550 cents, outstanding 202,385,725 cents, 158,399 ordered / 106,704 shipped units; regional outstanding West 83,151,325 cents, Central 49,160,225 cents, East 39,928,875 cents and South 30,145,300 cents. Query restore, chart reasons, executed-result note, cap/page labels and error guidance aligned. No actionable source blocker was found.
+
+This is source/model approval only. Actual production interaction, keyboard, imports/downloads, 320px and 200% text checks remain separate root-owned observations. Actual screen-reader and novice sessions remain open; none is inferred from this review.
+
+
+## SQL-11 production review — retained failure and focused repair
+
+The coordinator's actual narrow production check at sourceb31605ff11c8882e40b7b564a651a2514427790c found that explicit Skip to SQL editor could arrive with the advanced query caret at557 and horizontal scrollLeft177 in the319px frame. The query beginning was not visible on arrival. This is a real editor-navigation failure; a correct query result or DOM label did not establish the usable arrival path.
+
+Collaborating developer `/root/live_revision_models` repaired only the explicit skip action at `5c1caf4a6e3ac9251fa97012c2ab8a58fb673b7a`: prevent default anchor navigation, focus without scrolling, set the selection to0/0, reset horizontal/vertical editor scroll and bring the visible SQL query label into view with16px scroll margin. Ordinary editing does not reset the caret. The developer built production and restored the ignored local review harness. The source/engine/model is otherwise unchanged. Actual319px follow-up is pending the coordinator's observation; no pass is inferred from this source repair.
+
+
+## Targeted SQL-11 production follow-up — PASS at 5c1caf4a6e3ac9251fa97012c2ab8a58fb673b7a
+
+The coordinator selected the advanced fourth starter in an actual319 CSS-pixel production frame and activated Skip to SQL editor with Enter. Observed: editor focused, selection start0, scrollLeft0, scrollTop0, editor width277px with565px internally scrollable SQL text. The query label and beginning were visibly present; screenshot is retained in course evidence as sql/narrow-query-start.png. This repairs the prior caret557/scrollLeft177 arrival failure without changing ordinary editing behavior.
+
+A separate1439 CSS-pixel production frame with200% computed font sizes had1439px page width and no horizontal page overflow. The editor beginning and Run/Cancel/Save/Restore controls were reachable and the screenshot was viewed. SQL's internal horizontal text scrolling remains intentional. This is authored font enlargement, not a native browser-zoom or screen-reader claim. The coordinator also confirmed exact restoration of the earlier query ending DESC;, actionable unknown-column guidance with prior-result provenance, and the tiny join-trap output $750 versus $550. These are actual browser observations reported by root, not this agent's DOM/source inference.
+
+
+## Final bounded correction review — source 5c1caf4a6e3ac9251fa97012c2ab8a58fb673b7a
+
+The coordinator confirmed47/47 actual browser cases at b31605ff11c8882e40b7b564a651a2514427790c. The subsequent5c1caf4 correction changes only the explicit editor skip action, its visible label and scroll margin; engine/model/query/presentation/tests are unchanged. The prior47-case model result remains applicable to those unchanged paths; no new47-case run is invented. The narrow skip failure and successful5c1caf4 production follow-up are preserved above.
+
+At b31605f, actual production confirmed restoration of the exact query ending DESC;, unknown-column recovery guidance with visibly attributed old results, and the tiny raw-join trap $750 versus$550. At5c1caf4, the319px advanced-starter skip path and separate1439px/200% computed-font editor/control path passed the scoped checks above. SQL-01/04/07/08/09/10/12 are implemented; SQL-11 has the targeted real browser repair evidence. Native paired CSV/result-note export remains unverified this round. Malformed SQL, timeout and cancellation have model/engine test coverage, but their complete current production recovery interactions were not newly witnessed; keep that distinction explicit.
+
+ALL-02/05/07/14 paths are implemented; ALL-08 is not applicable. ALL-12 has the scoped narrow/editor/enlarged-text evidence described above, not a universal accessibility certification. ALL-11 remains open for an actual screen-reader task and ALL-16 for an actual novice. The prepared12-app walkthrough packet supplies tasks and facilitator reference only.
+
+Before this report, committed/staged/working source, tests, PLAN, workflow, packages, scripts and licenses match5c1caf4; only EVALUATION.md differs. No push or corrected live deployment is claimed. Production9716/test9715 remain available for coordinator gates.
