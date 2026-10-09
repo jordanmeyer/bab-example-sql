@@ -17,8 +17,8 @@ export function dataset(size='tiny') {
     line_items:[['A','O1','P1',10,2000],['B','O1','P2',5,3000],['C','O2','P1',4,2500],['D','O3','P2',2,5000]].map(([line_id,order_id,product_id,ordered_units,unit_price_cents])=>({line_id,order_id,product_id,ordered_units,unit_price_cents})),
     shipment_lines:[['S1','A',3],['S2','A',2],['S3','B',5],['S4','C',1]].map(([shipment_id,line_id,shipped_units],i)=>({shipment_id,line_id,shipped_on:`2026-01-${String(i+8).padStart(2,'0')}`,shipped_units}))
   };
-  const names=['Notebook','Desk lamp','Pen tray','Cable dock','Book stand','Desk mat','Pencil cup','Memo board','File holder','Laptop riser','Task timer','Paper sorter'];
-  const products=names.map((product,i)=>({product_id:`P${i+1}`,product,category:['Paper','Lighting','Organization'][i%3]}));
+  const catalog=[['Notebook','Paper'],['Desk lamp','Lighting'],['Pen tray','Organization'],['Cable dock','Organization'],['Book stand','Organization'],['Desk mat','Accessories'],['Pencil cup','Organization'],['Memo board','Organization'],['File holder','Organization'],['Laptop riser','Accessories'],['Task timer','Accessories'],['Paper sorter','Organization']];
+  const products=catalog.map(([product,category],i)=>({product_id:`P${i+1}`,product,category}));
   const orders=[],line_items=[],shipment_lines=[];
   const date=n=>new Date(Date.UTC(2026,0,1+n)).toISOString().slice(0,10);
   for(let i=0;i<2400;i++){
