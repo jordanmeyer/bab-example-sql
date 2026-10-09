@@ -1,6 +1,6 @@
 # Evaluation — Fulfillment Lab
 
-Current status: developer implementation and actual **36/36 browser integration checks passed**. Independent review is in progress in reviewer-owned REVIEW.md. Final timeout/download witness is pending at this report revision. Do not interpret earlier failed approaches as current success.
+Current status: developer implementation and actual **36/36 browser integration checks passed**. Independent review is in progress in reviewer-owned REVIEW.md. The coordinator subsequently reported the real deadline and download checks passing; its detailed witness is recorded separately. Do not interpret earlier failed approaches as current success.
 
 ## Preserved failed approaches
 
@@ -29,3 +29,7 @@ The coordinator independently exercised actual keyboard execution, exact large n
 Clean npm ci completed with zero audit findings at this time. Production build passed with32 package notices and a disclosed bundle-size warning. The canonical dependency checker rejected the still-candidate DuckDB package as expected under the coordinator's trial authorization; promotion is a separate coordinator gate.
 
 Production pageAssets inventory listed only local app JS/CSS/EH worker and favicon. It does not expose worker-internal WASM requests and is not a complete network trace. Local asset imports/build output, blocked external attempts and JSON loaded=false jointly support the local-only configuration. Browser coverage is this host's in-app Chromium surface, not a cross-browser compatibility claim. Fixed-width frames exercise actual production CSS but do not emulate every mobile input/device characteristic.
+
+## Final coordinator follow-up
+
+After recovering from another browser download-event hang, the coordinator reported actual deadline and download PASS. This closes the two previously pending observations; the earlier stalled event wait remains a tool failure and is not counted as a successful export. No source or PLAN changed. Detailed coordinator observations and the independent reviewer verdict remain authoritative; this report does not independently claim a new browser run. Future checks use the actual download button followed by inspection of the known synthetic file, never another waitForEvent download call.
